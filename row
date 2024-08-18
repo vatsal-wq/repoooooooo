@@ -1,0 +1,36 @@
+import React from 'react';
+
+function ProductRow({ product }) {
+    const getStatusColor = (quantity) => {
+        if (quantity > 10) return 'green';
+        if (quantity > 0) return 'yellow';
+        return 'red';
+    };
+
+    return (
+        <tr>
+            <td>{product.product_code}</td>
+            <td>{product.name}</td>
+            <td><img src={product.image} alt={product.name} width="50" /></td>
+            <td>${product.price.toFixed(2)}</td>
+            <td>{product.category}</td>
+            <td>{product.rating}</td>
+            <td>{product.reviews || 0}</td>
+            <td>
+                <div style={{ backgroundColor: getStatusColor(product.quantity), padding: '5px', borderRadius: '5px', color: 'white', textAlign: 'center' }}>
+                    {product.quantity > 10 ? 'In Stock' : product.quantity > 0 ? 'Low Stock' : 'Out of Stock'}
+                </div>
+            </td>
+            <td>
+                <button style={{ backgroundColor: 'green', color: 'white', marginRight: '10px' }}>
+                    <i className="fas fa-pencil-alt"></i> Edit
+                </button>
+                <button style={{ backgroundColor: 'red', color: 'white' }}>
+                    <i className="fas fa-trash-alt"></i> Delete
+                </button>
+            </td>
+        </tr>
+    );
+}
+
+export default ProductRow;

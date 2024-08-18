@@ -1,0 +1,36 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import ProductTable from './ProductTable';
+
+function Home() {
+    const [products, setProducts] = useState([]);
+    const [search, setSearch] = useState('');
+
+    const fetchProducts = async () => {
+        const response = await axios.get('/products');
+        setProducts(response.data);
+    };
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+    const filteredProducts = products.filter(product =>
+        product.name.toLowerCase().includes(search.toLowerCase())
+    );
+
+    return (
+        <div>
+            <h1>Welcome, {localStorage.getItem('username')}</h1>
+            <input 
+                type="text" 
+                placeholder="Search Products..." 
+                value={search} 
+                onChange={(e) => setSearch(e.target.value)} 
+            />
+            <ProductTable products={filteredProducts} />
+        </div>
+    );
+}
+
+export default Home;

@@ -1,126 +1,64 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-
-function Register() {
-
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [errors, setErrors] = useState({});
-    const navigate = useNavigate();
-
-    const bcrypt = require('bcryptjs');
-
-    
-
-    // async function hashPassword(password){
-    //     const saltRounds = 10;
-
-    //     const hashedPassword = await new Promise((resolve, reject) => {
-    //         bcrypt.hash(password, saltRounds, function (err, hash){
-    //             if (err) reject (err)
-    //             resolve(hash)
-    //         });
-    //     })
-
-    //     return hashedPassword;
-    // }
-    // const checkPassword = (stored_password, provided_password) => {
-    //     bcrypt.compare(provided_password, stored_password).then((res) => {
-    //         res === true;
-    //     })
-    // }
-
-    const loginReroute = () => {
-        navigate('/login');
-    }
-
-    const validateForm = () => {
-        const errors = {};
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const passwordPattern = /^(?=.*[!@#$%^&*])/;
-
-        if (!username) {
-            errors.username = 'Username is required.';
-        }
-
-        if (!email || !emailPattern.test(email)) {
-            errors.email = 'Please enter a valid email address.';
-        }
-
-        if (!password || password.length < 8 || !passwordPattern.test(password)) {
-            errors.password = 'Password must be at least 8 characters long and include at least one special character.';
-        }
-
-        return errors;
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const validationErrors = validateForm();
-
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-            return;
-        }
-
-        try{
-            
-            const secPass =  bcrypt.hashSync(password);
-            console.log(secPass);
-            await axios.post('http://localhost:5000/register', { username, email, secPass });
-            const test = await bcrypt.compare(password, secPass);
-            console.log(test);
-            alert("Registration succesfull");
-            navigate('/login');
-        } catch (error) {
-            alert('Registration failed');
-        } 
-        // //WORKING CODE
-        // try {
-        //     await axios.post('http://localhost:5000/register', { username, email, password });
-        //     alert("Registration Succesful");
-        //     navigate('/login');
-        // } catch (error) {
-        //     alert('Registration failed');
-        // }
-    };
-
-    return (
-        <div align='center'>
-            <h2>Register</h2>
-            <form onSubmit={handleSubmit}>
-                <input 
-                    type="text" 
-                    placeholder="Username" 
-                    value={username} 
-                    onChange={(e) => setUsername(e.target.value)} 
-                />
-                {errors.username && <p style={{ color: 'red' }}>{errors.username}</p>}
-                <br></br><br></br>
-                <input 
-                    type="email" 
-                    placeholder="Email" 
-                    value={email} 
-                    onChange={(e) => setEmail(e.target.value)} 
-                />
-                {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
-                <br></br><br></br>
-                <input 
-                    type="password" 
-                    placeholder="Password" 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                />
-                {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
-                <br></br><br></br>
-                <button type="submit">Register</button>
-                <br></br><br></br>
-                <button onClick={loginReroute}>Already Registered? Click here to Login</button>
-            </form>
-        </div>
-    );
+.register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f7f7f7;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    max-width: 400px;
+    margin: auto;
 }
 
-export default Register;
+h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.register-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.register-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.register-button, .login-button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.register-button:hover, .login-button:hover {
+    background-color: #45a049;
+}
+
+.login-button {
+    background-color: #f44336;
+}
+
+.login-button:hover {
+    background-color: #e53935;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+}

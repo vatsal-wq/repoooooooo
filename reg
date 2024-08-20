@@ -1,64 +1,66 @@
-.register-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-color: #f7f7f7;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    max-width: 400px;
-    margin: auto;
+import React, {useState} from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+function AddProduct() {
+    const [ProductName, setProductName] = useState('');
+    const [ProductImage, setProductImage] = useState('');
+    const [Price, setPrice] = useState('');
+    const [Category, setCategory] = useState('');
+    const [Rating, setRating] = useState('');
+    const [ProductCode, setProductCode] = useState('');
+    const [Quantity, setQuantity] = useState('');
+    const navigate = useNavigate();
+
+    const handleSubmit = async(e) => {
+        e.preventDefault();
+        try {
+            if (!ProductCode | !ProductName | !ProductImage | !Category | !Price | !Rating | !Quantity){
+                throw new Error("Data is required..");
+            }
+            console.log(ProductCode, ProductName, ProductImage, Category, parseFloat(Price), parseFloat(Rating), parseInt(Quantity));
+            axios.post("http://localhost:5000/add", {ProductCode, ProductName, ProductImage, Category, Price, Rating, Quantity})
+            alert("Product added");
+            navigate('/home');
+        } catch (error) {
+            console.log(error);
+            alert("Product could not be added..");
+        }
+    }
+
+    return (
+        <div align='center'>
+            <form onSubmit={handleSubmit}>
+                <h2>Add A Product</h2>
+                <label>Product Code:</label>
+                <input type='text' placeholder='Product Code' value={ProductCode} onChange={(e) => setProductCode(e.target.value)}/><br></br><br></br>
+
+                <label>Product Name: </label>
+                <input type='text' placeholder='Product Name' value={ProductName} onChange={(e) => setProductName(e.target.value)}/><br></br><br></br>
+
+                <label>Image URL: </label>
+                <input type='text' placeholder='Product Image' value={ProductImage} onChange={(e) => setProductImage(e.target.value)}/><br></br><br></br>
+
+                <label for='category'>Category: </label>
+                <select name='category' onChange={(e) => setCategory(e.target.value)}>
+                    <option disabled selected value> -- select an option --</option>
+                    <option value='Accesories'>Accesories</option>
+                    <option value='Clothing'>Clothing</option>
+                    <option value='Electronics'>Electronics</option>
+                    <option value='Fitness' >Fitness</option>
+                </select>
+                <br></br><br></br>
+                <label>Product Price: </label>
+                <input type='text' placeholder='Product Price' value={Price} onChange={(e) => setPrice(e.target.value)}/><br></br><br></br>
+                <label>Product Rating: </label>
+                <input type='text' placeholder='Product Rating' value={Rating} onChange={(e) => setRating(e.target.value)}/><br></br><br></br>
+                <label>Product Quantity: </label>
+                <input type='text' placeholder='Product Quantity' value={Quantity} onChange={(e) => setQuantity(e.target.value)}/><br></br><br></br>
+
+                <button type='submit'>Add Product</button>
+            </form>
+        </div>
+    );
 }
 
-h2 {
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.register-form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.register-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-    box-sizing: border-box;
-}
-
-.register-button, .login-button {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.register-button:hover, .login-button:hover {
-    background-color: #45a049;
-}
-
-.login-button {
-    background-color: #f44336;
-}
-
-.login-button:hover {
-    background-color: #e53935;
-}
-
-.error-message {
-    color: red;
-    font-size: 14px;
-    margin-bottom: 10px;
-}
+export default AddProduct;

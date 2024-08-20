@@ -93,3 +93,46 @@ function Login() {
 }
 
 export default Login;
+
+
+
+
+.login-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.login-button, .register-button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.login-button:hover, .register-button:hover {
+    background-color: #45a049;
+}
+
+.register-button {
+    background-color: #f44336;
+}
+
+.register-button:hover {
+    background-color: #e53935;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+}

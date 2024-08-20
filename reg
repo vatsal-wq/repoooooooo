@@ -1,91 +1,45 @@
-import React from 'react';
-import ProductRow from './ProductRow';
-
-// function ProductTable({ products }) {
-//     return (
-//         <table align='center' style={{width:'100%'}}>
-//             <thead>
-//                 <tr>
-//                     <th>Code</th>
-//                     <th>Name</th>
-//                     <th>Image</th>
-//                     <th>Price</th>
-//                     <th>Category</th>
-//                     <th>Rating</th>
-//                     <th>Stock Status</th>
-//                     <th>Actions</th>
-//                 </tr>
-//             </thead>
-            // <tbody>
-            //     {products.map(product => (
-            //         <ProductRow key={product.id} product={product} />
-            //     ))}
-            // </tbody>
-//         </table>
-//     );
-// }
-
-function ProductTable({products,requestSort,sortConfig}){
-    const getClassNamesFor = (name) => {
-        if (!sortConfig){
-            return;
-        }
-        return sortConfig.key === name ? sortConfig.direction : undefined;
-    }
-
-    const renderSortArrow = (key) => {
-        if (!sortConfig || sortConfig.key !== key){
-            return <span>⇅</span>
-        }
-        if (sortConfig.direction === 'ascending'){
-            return <span>↑</span>
-        } else {
-            return <span>↓</span>
-        }
-    };
-
-    return (
-        <table>
-            <thead>
-                <tr>
-                    <th>
-                        Name
-                        <button 
-                            type='button'
-                            onClick={() => requestSort('name')}
-                            className={getClassNamesFor('name')}>
-                                {renderSortArrow('name')}
-                            </button>
-                    </th>
-                    <th>Image</th>
-                    <th>Price
-                        <button 
-                            type='button'
-                            onClick={() => requestSort('price')}
-                            className={getClassNamesFor('price')}>
-                                {renderSortArrow('price')}
-                            </button>
-                    </th>
-                    <th>Category</th>
-                    <th>Rating
-                        <button 
-                            type='button'
-                            onClick={() => requestSort('rating')}
-                            className={getClassNamesFor('rating')}>
-                                {renderSortArrow('rating')}
-                            </button>
-                    </th>
-                    <th>Stock Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {products.map(product => (
-                    <ProductRow key={product.id} product={product} />
-                ))}
-            </tbody>
-        </table>
-    );
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
 }
 
-export default ProductTable;
+.product-table thead th {
+    background-color: #f2f2f2;
+    padding: 12px;
+    border-bottom: 2px solid #ddd;
+    position: relative;
+}
+
+.product-table th button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.product-table th button:hover {
+    color: #007BFF;
+}
+
+.product-table tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+.product-table tbody tr:nth-of-type(even) {
+    background-color: #f9f9f9;
+}
+
+.product-table tbody td {
+    padding: 12px;
+}
+
+.product-table tbody td img {
+    max-width: 100px;
+    height: auto;
+    border-radius: 5px;
+}

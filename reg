@@ -1,57 +1,93 @@
-.add-product-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    margin: 20px auto;
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import ProductTable from './ProductTable';
+import { useNavigate } from 'react-router-dom';
+import isAuthenticated from '../auth/Flag';
+
+
+function Home() {
+
+    useEffect(() => {
+        if(!isAuthenticated){
+            alert("Please login First");
+            navigate('/login');
+        }
+    }, []);
+
+    const [products, setProducts] = useState([]);
+    const [search, setSearch] = useState('');
+    const [sortConfig, setSortConfig] = useState({key: null, direction: 'ascending'});
+    const navigate = useNavigate();
+
+    const addRedirect = () => {
+        navigate('/add');
+    }
+    const logoutRedirect = () => {
+        // isAuthenticated = false;
+        navigate('/login')
+    }
+
+    const fetchProducts = async () => {
+        const response = await axios.get('http://localhost:5000/products');
+        console.log(response.data);
+        setProducts(response.data);
+    };
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+    const sortedProducts = React.useMemo( () => {
+        let sortableProducts = [...products];
+
+        if (sortConfig.key){
+            sortableProducts.sort((a,b) => {
+                if (a[sortConfig.key] < b[sortConfig.key]){
+                    return sortConfig.direction === 'ascending' ? -1 : 1;
+                }
+                
+                if (a[sortConfig.key] > b[sortConfig.key]){
+                    return sortConfig.direction === 'ascending' ? 1 : 1;
+                }
+
+                return 0;
+            });
+        }
+
+        return sortableProducts.filter(product => 
+            product.ProductName.toLowerCase().includes(search.toLowerCase() || 
+            product.ProductCode.toLowerCase().includes(search.toLowerCase())));
+    }, [products, sortConfig, search]);
+
+    const requestSort = (key) => {
+        let direction = 'ascending';
+        if(sortConfig.key === key && sortConfig.direction === 'ascending'){
+            direction = 'descending';
+        }
+        setSortConfig({key,direction});
+    }
+    // const filteredProducts = products.filter(product =>
+    //     product.ProductName.toLowerCase().includes(search.toLowerCase())
+    // );
+
+    return (
+        <div>
+            <table style={{width:'100%'}}>
+                <tr>
+                    <td><h1>Welcome, {localStorage.getItem('username')}</h1></td>
+                    <td><input
+                            type="text" 
+                            placeholder="Search Products..." 
+                            value={search} 
+                            onChange={(e) => setSearch(e.target.value)} />
+                    </td>
+                    <td><button onClick={addRedirect}>Add Product</button></td>
+                    <td><button onClick={logoutRedirect} >Logout</button></td>
+                </tr>
+            </table>
+            <ProductTable products={sortedProducts} requestSort={requestSort} sortConfig={sortConfig} />
+        </div>
+    );
 }
 
-.add-product-form {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
-}
-
-label {
-    font-size: 14px;
-    margin-bottom: 5px;
-    color: #555;
-}
-
-.input-field {
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-.input-field:focus {
-    border-color: #007BFF;
-    outline: none;
-}
-
-.submit-button {
-    padding: 10px 15px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-}
-
-.submit-button:hover {
-    background-color: #0056b3;
-}
+export default Home;

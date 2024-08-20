@@ -1,35 +1,46 @@
-import React from 'react';
-
-function ProductRow({ product }) {
-    const getStatusColor = (quantity) => {
-        if (quantity > 10) return 'green';
-        if (quantity > 0) return 'yellow';
-        return 'red';
-    };
-
-    return (
-        <tr align='center' style={{width:'100%'}}>
-            <td>{product.ProductCode}</td>
-            <td>{product.ProductName}</td>
-            <td><img src={product.ProductImage} alt={product.ProductName} width="150" /></td>
-            <td>Rs. {product.Price}</td>
-            <td>{product.Category}</td>
-            <td>{product.Rating || 0}</td>
-            <td>
-                <div style={{ backgroundColor: getStatusColor(product.Quantity), padding: '5px', borderRadius: '5px', color: 'white', textAlign: 'center' }}>
-                    {product.Quantity > 10 ? 'In Stock' : product.Quantity > 0 ? 'Low Stock' : 'Out of Stock'}
-                </div>
-            </td>
-            <td>
-                <button style={{ backgroundColor: 'green', color: 'white', marginRight: '10px' }}>
-                    <i className="fas fa-pencil-alt"></i> Edit
-                </button>
-                <button style={{ backgroundColor: 'red', color: 'white' }}>
-                    <i className="fas fa-trash-alt"></i> Delete
-                </button>
-            </td>
-        </tr>
-    );
+.product-row {
+    text-align: center;
 }
 
-export default ProductRow;
+.product-image {
+    max-width: 150px;
+    height: auto;
+    border-radius: 5px;
+}
+
+.stock-status {
+    padding: 5px;
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+
+.edit-button {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.edit-button:hover {
+    background-color: darkgreen;
+}
+
+.delete-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.delete-button:hover {
+    background-color: darkred;
+}

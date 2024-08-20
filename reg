@@ -1,93 +1,74 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import ProductTable from './ProductTable';
-import { useNavigate } from 'react-router-dom';
-import isAuthenticated from '../auth/Flag';
-
-
-function Home() {
-
-    useEffect(() => {
-        if(!isAuthenticated){
-            alert("Please login First");
-            navigate('/login');
-        }
-    }, []);
-
-    const [products, setProducts] = useState([]);
-    const [search, setSearch] = useState('');
-    const [sortConfig, setSortConfig] = useState({key: null, direction: 'ascending'});
-    const navigate = useNavigate();
-
-    const addRedirect = () => {
-        navigate('/add');
-    }
-    const logoutRedirect = () => {
-        // isAuthenticated = false;
-        navigate('/login')
-    }
-
-    const fetchProducts = async () => {
-        const response = await axios.get('http://localhost:5000/products');
-        console.log(response.data);
-        setProducts(response.data);
-    };
-
-    useEffect(() => {
-        fetchProducts();
-    }, []);
-
-    const sortedProducts = React.useMemo( () => {
-        let sortableProducts = [...products];
-
-        if (sortConfig.key){
-            sortableProducts.sort((a,b) => {
-                if (a[sortConfig.key] < b[sortConfig.key]){
-                    return sortConfig.direction === 'ascending' ? -1 : 1;
-                }
-                
-                if (a[sortConfig.key] > b[sortConfig.key]){
-                    return sortConfig.direction === 'ascending' ? 1 : 1;
-                }
-
-                return 0;
-            });
-        }
-
-        return sortableProducts.filter(product => 
-            product.ProductName.toLowerCase().includes(search.toLowerCase() || 
-            product.ProductCode.toLowerCase().includes(search.toLowerCase())));
-    }, [products, sortConfig, search]);
-
-    const requestSort = (key) => {
-        let direction = 'ascending';
-        if(sortConfig.key === key && sortConfig.direction === 'ascending'){
-            direction = 'descending';
-        }
-        setSortConfig({key,direction});
-    }
-    // const filteredProducts = products.filter(product =>
-    //     product.ProductName.toLowerCase().includes(search.toLowerCase())
-    // );
-
-    return (
-        <div>
-            <table style={{width:'100%'}}>
-                <tr>
-                    <td><h1>Welcome, {localStorage.getItem('username')}</h1></td>
-                    <td><input
-                            type="text" 
-                            placeholder="Search Products..." 
-                            value={search} 
-                            onChange={(e) => setSearch(e.target.value)} />
-                    </td>
-                    <td><button onClick={addRedirect}>Add Product</button></td>
-                    <td><button onClick={logoutRedirect} >Logout</button></td>
-                </tr>
-            </table>
+<div className="home-container">
+            <div className="header-container">
+                <h1>Welcome, {localStorage.getItem('username')}</h1>
+                <div className="header-controls">
+                    <input
+                        type="text"
+                        placeholder="Search Products..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="search-input"
+                    />
+                    <button onClick={addRedirect} className="action-button">Add Product</button>
+                    <button onClick={logoutRedirect} className="action-button">Logout</button>
+                </div>
+            </div>
             <ProductTable products={sortedProducts} requestSort={requestSort} sortConfig={sortConfig} />
         </div>
-    );
+
+-----------
+
+.home-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 20px auto;
 }
 
-export default Home;
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+.search-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 300px;
+}
+
+.search-input:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+.action-button {
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #0056b3;
+}

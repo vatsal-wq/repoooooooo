@@ -1,45 +1,35 @@
-.product-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 18px;
-    text-align: left;
+import React from 'react';
+
+function ProductRow({ product }) {
+    const getStatusColor = (quantity) => {
+        if (quantity > 10) return 'green';
+        if (quantity > 0) return 'yellow';
+        return 'red';
+    };
+
+    return (
+        <tr align='center' style={{width:'100%'}}>
+            <td>{product.ProductCode}</td>
+            <td>{product.ProductName}</td>
+            <td><img src={product.ProductImage} alt={product.ProductName} width="150" /></td>
+            <td>Rs. {product.Price}</td>
+            <td>{product.Category}</td>
+            <td>{product.Rating || 0}</td>
+            <td>
+                <div style={{ backgroundColor: getStatusColor(product.Quantity), padding: '5px', borderRadius: '5px', color: 'white', textAlign: 'center' }}>
+                    {product.Quantity > 10 ? 'In Stock' : product.Quantity > 0 ? 'Low Stock' : 'Out of Stock'}
+                </div>
+            </td>
+            <td>
+                <button style={{ backgroundColor: 'green', color: 'white', marginRight: '10px' }}>
+                    <i className="fas fa-pencil-alt"></i> Edit
+                </button>
+                <button style={{ backgroundColor: 'red', color: 'white' }}>
+                    <i className="fas fa-trash-alt"></i> Delete
+                </button>
+            </td>
+        </tr>
+    );
 }
 
-.product-table thead th {
-    background-color: #f2f2f2;
-    padding: 12px;
-    border-bottom: 2px solid #ddd;
-    position: relative;
-}
-
-.product-table th button {
-    background: none;
-    border: none;
-    padding: 0;
-    margin-left: 8px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.product-table th button:hover {
-    color: #007BFF;
-}
-
-.product-table tbody tr {
-    border-bottom: 1px solid #ddd;
-}
-
-.product-table tbody tr:nth-of-type(even) {
-    background-color: #f9f9f9;
-}
-
-.product-table tbody td {
-    padding: 12px;
-}
-
-.product-table tbody td img {
-    max-width: 100px;
-    height: auto;
-    border-radius: 5px;
-}
+export default ProductRow;
